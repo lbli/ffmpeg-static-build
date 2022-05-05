@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
  
+#####
+##### yum install autoconf automake bzip2 bzip2-devel cmake  gcc gcc-c++  zlib-devel python-devel libtool -y
+#####
+
+
 current_dir=$(cd ../; pwd -P)
 build_dir="${current_dir}/build"
 release_dir="${current_dir}/release"
