@@ -4,7 +4,8 @@ set -e
 #####
 ##### yum install autoconf automake bzip2 bzip2-devel cmake  gcc gcc-c++  zlib-devel python-devel libtool -y
 ##### yum install gcc-c++ cmake this version
- 
+####  -lstdc++ -stati may result dumps,so take care using it,dont use it as you can 
+
 current_dir=$(cd ../; pwd -P)
 build_dir="${current_dir}/build"
 release_dir="${current_dir}/release"
