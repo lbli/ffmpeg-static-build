@@ -1,11 +1,10 @@
 #!/bin/bash
 set -e
- 
+
 #####
 ##### yum install autoconf automake bzip2 bzip2-devel cmake  gcc gcc-c++  zlib-devel python-devel libtool -y
 #####
-
-
+ 
 current_dir=$(cd ../; pwd -P)
 build_dir="${current_dir}/build"
 release_dir="${current_dir}/release"
@@ -13,7 +12,11 @@ echo "start to build the tools for transcode system(current_dir: ${current_dir},
  
 mkdir -p ${build_dir}
 mkdir -p ${release_dir}
+
+
  
+TARGET_DIR_SED=$(echo $release_dir | awk '{gsub(/\//, "\\/"); print}')
+
 
 wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz --no-check-certificate
 wget https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz --no-check-certificate
@@ -49,6 +52,7 @@ wget https://rtmpdump.mplayerhq.hu/download/rtmpdump-2.3.tgz --no-check-certific
 
 wget https://ffmpeg.org/releases/ffmpeg-4.4.2.tar.xz --no-check-certificate
 
+wget https://www.libsdl.org/release/SDL2-2.0.14.tar.gz --no-check-certificate
 
 
 
@@ -57,4 +61,4 @@ wget https://ffmpeg.org/releases/ffmpeg-4.4.2.tar.xz --no-check-certificate
 
 
 
-PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=$release_dir  --extra-cflags="-I$release_dir/include" --extra-ldflags="-L$release_dir/lib -L$release_dir/lib64" --extra-libs='-lpthread -lm -lz' --bindir=/root/ffmpeg-static/bin-ldl --pkg-config-flags="--static" --enable-gpl --enable-static --enable-nonfree --enable-version3 --enable-libx264 --enable-libx265 --enable-pthreads --enable-protocol=rtmp --enable-demuxer=rtsp --enable-bsf=extract_extradata --enable-muxer=flv --enable-libfdk-aac --enable-libfreetype --enable-libfontconfig --extra-libs=-levent
+PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=$release_dir  --extra-cflags="-I$release_dir/include" --extra-ldflags="-L$release_dir/lib -L$release_dir/lib64" --extra-libs='-lpthread -lm -lz' --bindir=/root/ffmpeg-static/bin-ldl --pkg-config-flags="--static" --enable-gpl --enable-static --enable-nonfree --enable-version3 --enable-libx264 --enable-libx265 --enable-pthreads --enable-protocol=rtmp --enable-demuxer=rtsp --enable-bsf=extract_extradata --enable-muxer=flv --enable-libfdk-aac --enable-libfreetype --enable-libfontconfig --enable-sdl --extra-libs=-levent
