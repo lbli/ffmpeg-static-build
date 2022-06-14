@@ -73,7 +73,7 @@ else
 fi
 popd
 
-# openssl
+## openssl
 pushd ${build_dir}
 if ! [ -e "openssl" ]
 then
@@ -450,38 +450,198 @@ popd
 
 
 # libx265
-pushd ${build_dir} 
-if ! [ -e "x265" ]
+#pushd ${build_dir} 
+#if ! [ -e "x265" ]
+#then
+#    echo "########## libx265 begin ##########"
+#    if ! [ -e "x265_2.6.tar.gz" ]
+#    then
+#        # download x265_2.6.tar.gz
+#        echo "########## to download x265  ##########"
+#        wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz --no-check-certificate
+#    fi
+
+
+
+
+
+
+
+
+
+
+#    # download page: wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz
+#    tar xf x265_2.6.tar.gz
+#    pushd x265_v2.6
+#    #pushd build/linux 
+#    #PATH="${release_dir}/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${release_dir}" -DENABLE_SHARED:BOOL=OFF -DBIN_INSTALL_DIR=/root/release/bin -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
+#    PATH="${release_dir}/bin:${BIN_DIR}:$PATH" cmake ./source -DCMAKE_INSTALL_PREFIX=${release_dir} -DBUILD_SHARED_LIBS=OFF -DBIN_INSTALL_DIR=${release_dir}/bin
+#    #cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DENABLE_SHARED:BOOL=OFF -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
+#    #make -j16
+#    #make install
+#    popd
+#    popd
+#    touch x265
+#    echo "########## libx265 ok ##########"
+#else
+#    echo "########## libx265 has been installed ##########"
+#fi
+#popd
+
+
+
+
+
+
+
+# libpng
+pushd ${build_dir}
+if ! [ -e "libpng" ]
 then
-    echo "########## libx265 begin ##########"
-    if ! [ -e "x265_2.6.tar.gz" ]
+    echo "########## libpng begin ##########"
+    if ! [ -e "libpng-1.6.37.tar.xz" ]
     then
-        # download x265_2.6.tar.gz
-        echo "########## to download x265  ##########"
-        wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz --no-check-certificate
+        # download libpng
+        echo "########## to download libpng-1.6.37.tar.xz  ##########"
+        wget https://downloads.sourceforge.net/libpng/libpng-1.6.37.tar.xz --no-check-certificate
     fi
 
-
-
-
-
-    # download page: wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz
-    tar xf x265_2.6.tar.gz
-    pushd x265_v2.6
-    pushd build/linux 
-    #PATH="${release_dir}/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${release_dir}" -DENABLE_SHARED:BOOL=OFF -DBIN_INSTALL_DIR=/root/release/bin -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
-    PATH="${release_dir}/bin:${BIN_DIR}:$PATH" cmake ./source -DCMAKE_INSTALL_PREFIX=${release_dir} -DBUILD_SHARED_LIBS=OFF -DBIN_INSTALL_DIR=${release_dir}/bin
-    #cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DENABLE_SHARED:BOOL=OFF -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
-    make -j16
+    tar xf libpng-1.6.37.tar.xz
+    pushd libpng-1.6.37
+    PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig ./configure --prefix=${release_dir} --enable-static=yes --enable-shared=no
+    PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig make -j16
     make install
     popd
-    popd
-    touch x265
-    echo "########## libx265 ok ##########"
+    touch libpng
+    echo "########## libpng ok ##########"
 else
-    echo "########## libx265 has been installed ##########"
+    echo "########## libpng has been installed ##########"
 fi
 popd
+
+
+# libxml2 (requried by fontconfig)
+pushd ${build_dir} 
+if ! [ -e "libxml2" ]
+then
+    echo "########## libxml2 begin ##########"
+
+    if ! [ -e "libxml2-2.9.14.tar.xz" ]
+    then
+        # download libxml2
+        echo "########## to download libxml2-2.9.14.tar.xz  ##########"
+        wget https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.14.tar.xz --no-check-certificate
+    fi
+
+    tar xf libxml2-2.9.14.tar.xz
+    pushd libxml2-2.9.14
+    PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig ./configure --prefix=${release_dir} --enable-static=yes --enable-shared=no
+    make
+    make install
+    popd
+    touch libxml2
+    echo "########## libxml2 ok ##########"
+else
+    echo "########## libxml2 has been installed ##########"
+fi
+popd
+
+
+# freetype (requried by fontconfig)
+pushd ${build_dir}
+if ! [ -e "freetype" ]
+then
+    echo "########## freetype begin ##########"
+
+    if ! [ -e "freetype-2.10.0.tar.bz2" ]
+    then
+        # download freetype-2.10.0
+        echo "########## to download freetype-2.10.0.tar.bz2  ##########"
+        wget http://download.savannah.gnu.org/releases/freetype/freetype-2.10.0.tar.bz2 --no-check-certificate
+    fi
+
+    tar xf freetype-2.10.0.tar.bz2
+    pushd freetype-2.10.0
+    PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig ./configure --prefix=${release_dir} --enable-static=yes --enable-shared=no
+    make
+    make install
+    popd
+    touch freetype
+    echo "########## freetype ok ##########"
+else
+    echo "########## freetype has been installed ##########"
+fi
+popd    
+
+
+# fribidi (requried by fontconfig)
+pushd ${build_dir}
+if ! [ -e "fribidi" ]
+then
+    echo "########## fribidi begin ##########"
+
+    if ! [ -e "fribidi" ]
+    then
+        # download fribidi-1.0.11
+        echo "########## to download fribidi-1.0.11.tar.xz  ##########"
+        wget https://github.com/fribidi/fribidi/releases/download/v1.0.11/fribidi-1.0.11.tar.xz --no-check-certificate
+    fi
+
+    tar xf fribidi-1.0.11.tar.xz
+    pushd fribidi-1.0.11
+    PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig ./configure --prefix=${release_dir} --enable-static=yes --enable-shared=no
+    make
+    make install
+    popd
+    touch fribidi
+    echo "########## fribidi ok ##########"
+else
+    echo "########## fribidi has been installed ##########"
+fi
+popd
+
+
+
+
+
+
+# fontconfig (requried by fontconfig)
+pushd ${build_dir}
+if ! [ -e "fontconfig" ]
+then
+    echo "########## fontconfig begin ##########"
+
+    if ! [ -e "fontconfig" ]
+    then
+        # download fontconfig
+        echo "########## to download fontconfig-2.13.95.tar.gz  ##########"
+        wget https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.95.tar.gz --no-check-certificate
+    fi
+
+    tar xf fontconfig-2.13.95.tar.gz
+    pushd fontconfig-2.13.95
+    PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig ./configure --prefix=${release_dir} --enable-static=yes --enable-shared=no --enable-libxml2
+    PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig make
+    make install
+    popd
+    touch fontconfig
+    echo "########## fontconfig ok ##########"
+else
+    echo "########## fontconfig has been installed ##########"
+fi
+popd
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -534,7 +694,6 @@ then
     --enable-libopus \
     --enable-libvpx \
     --enable-libx264 \
-    --enable-libx265 \
     --enable-nonfree
 
 
@@ -628,4 +787,4 @@ popd
 #PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=$release_dir  --extra-cflags="-I$release_dir/include" --extra-ldflags="-L$release_dir/lib -L$release_dir/lib64" --extra-libs='-lpthread -lm -lz' --bindir=/root/ffmpeg-static/bin-ldl --pkg-config-flags="--static" --enable-gpl --enable-static --enable-nonfree --enable-version3 --enable-libx264 --enable-libx265 --enable-pthreads --enable-protocol=rtmp --enable-demuxer=rtsp --enable-bsf=extract_extradata --enable-muxer=flv --enable-libfdk-aac --enable-libfreetype --enable-libfontconfig --enable-sdl --extra-libs=-levent
 
 
-PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=/root/release --pkg-config-flags=--static --extra-cflags=-I/root/release/include --extra-ldflags='-L/root/release/lib -ldl -lm -lpthread -lrt -lstdc++ -static' --extra-libs=-lpthread --extra-libs=-lm --bindir=/root/release/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libopus --enable-libvpx --enable-libx264 --enable-libx265 --enable-nonfree
+#PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=/root/release --pkg-config-flags=--static --extra-cflags=-I/root/release/include --extra-ldflags='-L/root/release/lib -ldl -lm -lpthread -lrt -lstdc++ -static' --extra-libs=-lpthread --extra-libs=-lm --bindir=/root/release/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libopus --enable-libvpx --enable-libx264 --enable-libx265 --enable-nonfree
