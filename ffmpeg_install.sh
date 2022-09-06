@@ -424,18 +424,18 @@ pushd ${build_dir}
 if ! [ -e "libvpx" ]
 then
     echo "########## libvpx begin ##########"
-    if ! [ -e "libvpx_1.10.0.orig.tar.gz" ]
+    if ! [ -e "libvpx_1.12.0.orig.tar.gz" ]
     then
-        # download libvpx_1.10.0.orig.tar.gz
+        # download libvpx_1.12.0.orig.tar.gz
         echo "########## to download libvpx  ##########"
-        wget mirrors.nju.edu.cn/kali/pool/main/libv/libvpx/libvpx_1.10.0.orig.tar.gz --no-check-certificate
+        wget mirrors.nju.edu.cn/kali/pool/main/libv/libvpx/libvpx_1.12.0.orig.tar.gz --no-check-certificate
     fi
 
 
 
 
-    tar xf libvpx_1.10.0.orig.tar.gz
-    pushd libvpx-1.10.0
+    tar xf libvpx_1.12.0.orig.tar.gz
+    pushd libvpx-1.12.0
     PATH="$BIN_DIR:$PATH" ./configure --prefix=${release_dir} --enable-static --disable-shared  --disable-examples --disable-unit-tests --enable-pic
     PATH="$BIN_DIR:$PATH" make -j16
     make install
@@ -649,53 +649,92 @@ popd
 
 # ffmpeg
 pushd ${build_dir} 
-if ! [ -e "ffmpeg4.4.2" ]
+if ! [ -e "ffmpeg-5.1" ]
 then
     echo "########## ffmepg begin ##########"
     set -x
  
-    if ! [ -e "ffmpeg-4.4.2.tar.xz" ]
+    if ! [ -e "ffmpeg-5.1.tar.gz" ]
     then
-        # download ffmpeg-4.4.2.tar.xz
-        echo "########## to download ffmpeg-4.4.2.tar.xz  ##########"
-        wget https://ffmpeg.org/releases/ffmpeg-4.4.2.tar.xz --no-check-certificate
+        # download ffmpeg-5.1.tar.gz
+        echo "########## to download ffmpeg-5.1.tar.gz  ##########"
+        wget https://ffmpeg.org/releases/ffmpeg-5.1.tar.gz --no-check-certificate
     fi
 
 
-    #if ! [ -d "ffmpeg-4.4.2" ]
+    #if ! [ -d "ffmpeg-5.1" ]
     #then
-    #    tar xf ffmpeg-4.4.2.tar.xz
+    #    tar xf ffmpeg-5.1.tar.gz
     #fi
     
     echo "remove all so to force the ffmpeg to build in static"
     rm -f ${release_dir}/lib/*.so*
  
-    tar xf ffmpeg-4.4.2.tar.xz
-    pushd ffmpeg-4.4.2
+    tar xf ffmpeg-5.1.tar.gz
+    pushd ffmpeg-5.1
  
     #export ffmpeg_exported_release_dir=${release_dir}
     #echo ${ffmpeg_exported_release_dir}/include
     #echo ${ffmpeg_exported_release_dir}/lib
  
 
-    PATH="${release_dir}/bin:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ ./configure \
-    --prefix="${release_dir}" \
-    --extra-cflags="-I${release_dir}/include" \
-    --extra-ldflags="-L${release}/lib -ldl -lm -lpthread -lrt -lstdc++ -static" \
-    --pkg-config-flags="--static" \
-    --enable-static \
-    --extra-libs=-lpthread \
-    --extra-libs=-lm \
-    --bindir="${release_dir}/bin" \
-    --enable-gpl \
-    --enable-static \
-    --disable-shared \
-    --enable-libfdk_aac \
-    --enable-libopus \
-    --enable-libvpx \
-    --enable-libx264 \
-    --enable-nonfree
+    #PATH="${release_dir}/bin:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ ./configure \
+    #--prefix="${release_dir}" \
+    #--extra-cflags="-I${release_dir}/include" \
+    #--extra-ldflags="-L${release}/lib -ldl -lm -lpthread -lrt -lstdc++ -static" \
+    #--pkg-config-flags="--static" \
+    #--enable-static \
+    #--extra-libs=-lpthread \
+    #--extra-libs=-lm \
+    #--bindir="${release_dir}/bin" \
+    #--enable-gpl \
+    #--disable-shared \
+    #--enable-libfdk_aac \
+    #--enable-libopus \
+    #--enable-libvpx \
+    #--enable-libx264 \
+    #--enable-nonfree
 
+
+
+    #PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=$release_dir  --extra-cflags="-I$release_dir/include" --extra-ldflags="-L$release_dir/lib -L$release_dir/lib64"  --bindir=/root/ffmpeg-static/bin-ldl --pkg-config-flags="--static" --enable-gpl --enable-static --enable-nonfree --enable-version3 --enable-libx264 --enable-libx265 --enable-pthreads --enable-protocol=rtmp --enable-demuxer=rtsp --enable-bsf=extract_extradata --enable-muxer=flv --enable-libfdk-aac --enable-libfreetype --enable-libfontconfig --enable-sdl --extra-libs=-leve
+
+    # build for x264
+    # PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir} --extra-cflags=-I${release_dir}/include --pkg-config-flags=--static --enable-static --extra-libs=-lpthread --extra-libs=-lm --bindir=${release_dir}/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libx264 --enable-libx265 --enable-pthreads --enable-libfreetype --enable-libfontconfig --enable-libopus --enable-libvpx --enable-nonfree
+
+    #PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir} --extra-cflags=-I${release_dir}/include --pkg-config-flags=--static --enable-static --extra-libs=-lpthread --extra-libs=-lm --bindir=${release_dir}/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libmp3lame --enable-libx264 --enable-libx265 --enable-pthreads --enable-libfreetype --enable-libfontconfig --enable-libopus --enable-libvpx --enable-nonfree
+
+    # build for mp3 x264 x265 
+    PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir}  --extra-cflags="-I${release_dir}/include" --extra-ldflags="-L${release_dir}/lib -L${release_dir}/lib64" --extra-libs='-lpthread -lm -lz' --pkg-config-flags=--static --enable-static --extra-libs=-lpthread --extra-libs=-lm --bindir=${release_dir}/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libmp3lame --enable-libx264 --enable-libx265 --enable-pthreads --enable-libfreetype --enable-libfontconfig --enable-libopus --enable-libvpx --enable-nonfree
+
+    # build for mp3 x264 x265 static,
+    # will remind log
+    ### libavformat/libavformat.a(rtsp.o)：在函数‘get_sockaddr’中：
+    #### /root/dev_env/build/ffmpeg-5.1/libavformat/rtsp.c:203: 警告：Using 'getaddrinfo' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking 
+
+    PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir}  --extra-cflags="-I${release_dir}/include" --extra-ldflags="-L${release_dir}/lib -L${release_dir}/lib64" --extra-libs='-lpthread -lm -lz' --pkg-config-flags=--static --enable-static --extra-libs=-lpthread --extra-libs=-lm --bindir=${release_dir}/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libmp3lame --enable-libx264 --enable-libx265 --enable-pthreads --enable-libfreetype --enable-libfontconfig --enable-libopus --enable-libvpx --enable-nonfree --extra-ldflags="-L/root/dev_env/release/lib -ldl -lm -lpthread -lrt -static"
+
+    #PATH="${release_dir}/bin:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ ./configure \
+    #--prefix=${release_dir}  \
+    #--extra-cflags="-I$release_dir/include" \
+    #--extra-ldflags="-L$release_dir/lib -L$release_dir/lib64"
+    #--pkg-config-flags="--static" \
+    #--enable-gpl \
+    #--enable-static \
+    #--enable-nonfree \
+    #--enable-version3 \
+    #--enable-libx264 \
+    #--enable-libx265 \
+    #--enable-pthreads \
+    #--enable-protocol=rtmp \
+    #--enable-demuxer=rtsp \
+    #--enable-bsf=extract_extradata \
+    #--enable-muxer=flv \
+    #--enable-libfdk-aac \
+    #--enable-libfreetype \
+    #--enable-libfontconfig \
+    #--enable-sdl \
+    #--extra-libs=-levent
 
 
  
@@ -712,14 +751,15 @@ then
     #--extra-libs=-lhiredis --extra-libs=-lnuma --extra-libs=-levent 
     #--extra-libs=-lstdc++ --extra-libs=-lc
  
-    echo "ffmpeg4.4.2 begin make"
-    #PATH="${release_dir}/bin/:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ make -j16
+    echo "ffmpeg-5.1 begin make"
+    PATH="${release_dir}/bin/:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ make -j16
+    PATH="${release_dir}/bin/:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ make install
     #make install
     popd
-    touch ffmpeg4.4.2
-    echo "########## ffmpeg4.4.2 ok ##########"
+    touch ffmpeg-5.1
+    echo "########## ffmpeg-5.1 ok ##########"
 else
-    echo "########## ffmpeg4.4.2 has been installed ##########"
+    echo "########## ffmpeg-5.1 has been installed ##########"
 fi
 popd
 
@@ -788,3 +828,4 @@ popd
 
 
 #PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=/root/release --pkg-config-flags=--static --extra-cflags=-I/root/release/include --extra-ldflags='-L/root/release/lib -ldl -lm -lpthread -lrt -lstdc++ -static' --extra-libs=-lpthread --extra-libs=-lm --bindir=/root/release/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libopus --enable-libvpx --enable-libx264 --enable-libx265 --enable-nonfree
+
