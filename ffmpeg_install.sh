@@ -649,23 +649,23 @@ popd
 
 # ffmpeg
 pushd ${build_dir} 
-if ! [ -e "ffmpeg4.4.2" ]
+if ! [ -e "ffmpeg-5.1" ]
 then
     echo "########## ffmepg begin ##########"
     set -x
  
-    if ! [ -e "ffmpeg-4.4.2.tar.xz" ]
+    if ! [ -e "ffmpeg-5.1.tar.xz" ]
     then
-        # download ffmpeg-4.4.2.tar.xz
-        echo "########## to download ffmpeg-4.4.2.tar.xz  ##########"
-        wget https://ffmpeg.org/releases/ffmpeg-4.4.2.tar.xz --no-check-certificate
+        # download ffmpeg-5.1.tar.xz
+        echo "########## to download ffmpeg-5.1.tar.xz  ##########"
+        wget https://ffmpeg.org/releases/ffmpeg-5.1.tar.xz --no-check-certificate
     fi
     
     echo "remove all so to force the ffmpeg to build in static"
     rm -f ${release_dir}/lib/*.so*
  
-    tar xf ffmpeg-4.4.2.tar.xz
-    pushd ffmpeg-4.4.2
+    tar xf ffmpeg-5.1.tar.xz
+    pushd ffmpeg-5.1
  
     #export ffmpeg_exported_release_dir=${release_dir}
     #echo ${ffmpeg_exported_release_dir}/include
@@ -713,14 +713,14 @@ then
     #--extra-libs=-lhiredis --extra-libs=-lnuma --extra-libs=-levent 
     #--extra-libs=-lstdc++ --extra-libs=-lc
  
-    echo "ffmpeg4.4.2 begin make"
+    echo "ffmpeg-5.1 begin make"
     PATH="${release_dir}/bin/:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ make -j16
     make install
     popd
-    touch ffmpeg4.4.2
-    echo "########## ffmpeg4.4.2 ok ##########"
+    touch ffmpeg-5.1
+    echo "########## ffmpeg-5.1 ok ##########"
 else
-    echo "########## ffmpeg4.4.2 has been installed ##########"
+    echo "########## ffmpeg-5.1 has been installed ##########"
 fi
 popd
 
