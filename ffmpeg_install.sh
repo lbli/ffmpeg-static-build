@@ -467,9 +467,7 @@ then
     pushd x265_v2.6
     pushd build/linux 
     PATH="${release_dir}/bin:${BIN_DIR}/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${release_dir}" -DENABLE_SHARED:BOOL=OFF -DBIN_INSTALL_DIR=/root/release/bin -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
-#    PATH="${release_dir}/bin:${BIN_DIR}:$PATH" cmake ./source -DCMAKE_INSTALL_PREFIX=${release_dir} -DBUILD_SHARED_LIBS=OFF -DBIN_INSTALL_DIR=${release_dir}/bin
-#    #cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DENABLE_SHARED:BOOL=OFF -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
-     make -j16
+    make -j16
     make install
     popd
     popd
@@ -664,61 +662,58 @@ then
     #echo ${ffmpeg_exported_release_dir}/lib
  
 
-    PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir} \
-    --pkg-config-flags=--static \
-    --extra-cflags=-I${release_dir}/include \
-    --extra-ldflags='-L${release_dir}/lib -L${release_dir}/lib64 -ldl -lm -lpthread -lrt -static' \
-    --extra-libs='-lpthread -lm' \
-    --bindir=${release_dir}/bin \
-    --enable-gpl \
-    --enable-static \
-    --disable-shared \
-    --enable-libfdk_aac \
-    --enable-libopus \
-    --enable-libvpx \
-    --enable-libx264  \
-    --enable-libfreetype \
-    --enable-libfontconfig \
-    --enable-libfribidi \
-    --enable-nonfree
-
-
-
-
-
-
-    #PATH="${release_dir}/bin:${BIN_DIR}:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig/ ./configure \
-    #--prefix="${release_dir}" \
-    #--extra-cflags="-I${release_dir}/include" \
-    #--extra-ldflags="-L${release}/lib -ldl -lm -lpthread -lrt -lstdc++ -static" \
-    #--pkg-config-flags="--static" \
-    #--enable-static \
-    #--extra-libs=-lpthread \
-    #--extra-libs=-lm \
-    #--bindir="${release_dir}/bin" \
+    #PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir} \
+    #--pkg-config-flags=--static \
+    #--extra-cflags=-I${release_dir}/include \
+    #--extra-ldflags='-L${release_dir}/lib -L${release_dir}/lib64 -ldl -lm -lpthread -lrt -static' \
+    #--extra-libs='-lpthread -lm' \
+    #--bindir=${release_dir}/bin \
     #--enable-gpl \
     #--enable-static \
     #--disable-shared \
     #--enable-libfdk_aac \
     #--enable-libopus \
     #--enable-libvpx \
-    #--enable-libx264 \
+    #--enable-libx264  \
+    #--enable-libx265  \
+    #--enable-libfreetype \
+    #--enable-libfontconfig \
+    #--enable-libfribidi \
     #--enable-nonfree
 
 
 
- 
-    #./configure --prefix=${release_dir} --cc=$CC \
-    #--extra-cflags="-I${release_dir}/include -I${release_dir}/include/hiredis" \
-    #--extra-ldflags="-L${release_dir}/lib -L${release_dir}/lib64 -ldl -lm -lpthread -lrt -lstdc++ -static" \
-    #--pkg-config-flags="--static" \
-    #--enable-gpl --enable-static --enable-nonfree --enable-version3 --disable-ffplay --disable-ffserver \
-    #--enable-postproc \
-    #--enable-demuxer=oss \
-    #--disable-vaapi --disable-indev=alsa --disable-outdev=alsa \
-    #--enable-libopencore-amrnb --enable-libmp3lame --enable-libx264 --enable-libx265 --enable-libfaac --enable-libfdk-aac \
-    #--enable-libass --enable-libfreetype --enable-libfontconfig --enable-libfribidi \
-    #--extra-libs=-lhiredis --extra-libs=-lnuma --extra-libs=-levent 
+
+    PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir}  \
+    --extra-cflags="-I${release_dir}/include" \
+    --extra-ldflags="-L${release_dir}/lib -L${release_dir}/lib64" \
+    --extra-libs='-lpthread -lm -lz' \
+    --pkg-config-flags=--static \
+    --enable-static \
+    --extra-libs=-lpthread \
+    --extra-libs=-lm \
+    --bindir=${release_dir}/bin \
+    --enable-gpl \
+    --enable-static \
+    --disable-shared \
+    --enable-libfdk_aac \
+    --enable-libmp3lame \
+    --enable-libx264 \
+    --enable-libx265 \
+    --enable-pthreads \
+    --enable-libfreetype \
+    --enable-libfontconfig \
+    --enable-libopus \
+    --enable-libvpx \
+    --enable-nonfree \
+    --extra-ldflags="-L/root/dev_env/release/lib -ldl -lm -lpthread -lrt"
+    #--extra-ldflags="-L/root/dev_env/release/lib -ldl -lm -lpthread -lrt -static -lc"
+
+
+
+
+
+
     #--extra-libs=-lstdc++ --extra-libs=-lc
  
     echo "ffmpeg-5.1 begin make"
@@ -750,31 +745,13 @@ popd
 #wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_3.2.tar.gz --no-check-certificate
 #wget https://ffmpeg.org/releases/ffmpeg-4.4.2.tar.xz --no-check-certificate
 #wget https://tukaani.org/xz/xz-5.2.2.tar.gz --no-check-certificate
-
-#wget https://sourceforge.net/projects/libpng/files/libpng12/1.2.58/libpng-1.2.58.tar.xz --no-check-certificate
-
-#wget http://xmlsoft.org/sources/libxml2-2.9.12.tar.gz --no-check-certificate 
-
-#wget http://download.savannah.gnu.org/releases/freetype/freetype-2.10.2.tar.gz --no-check-certificate
-
-#wget http://mirrors.nju.edu.cn/ubuntu/pool/main/f/fribidi/fribidi_0.19.7.orig.tar.bz2 --no-check-certificate
-
-#wget https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.0.tar.gz --no-check-certificate
-
 #wget https://github.com/libass/libass/archive/0.13.6.tar.gz --no-check-certificate
-
 #wget http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz  --no-check-certificate
 #wget ftp.mozilla.org/pub/opus/opus-1.1.2.tar.gz --no-check-certificate
-
 #wget https://rtmpdump.mplayerhq.hu/download/rtmpdump-2.3.tgz --no-check-certificate
-
 #wget https://ffmpeg.org/releases/ffmpeg-4.4.2.tar.xz --no-check-certificate
-
 #wget https://www.libsdl.org/release/SDL2-2.0.14.tar.gz --no-check-certificate
-
-
 
 #PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=$release_dir  --extra-cflags="-I$release_dir/include" --extra-ldflags="-L$release_dir/lib -L$release_dir/lib64" --extra-libs='-lpthread -lm -lz' --bindir=/root/ffmpeg-static/bin-ldl --pkg-config-flags="--static" --enable-gpl --enable-static --enable-nonfree --enable-version3 --enable-libx264 --enable-libx265 --enable-pthreads --enable-protocol=rtmp --enable-demuxer=rtsp --enable-bsf=extract_extradata --enable-muxer=flv --enable-libfdk-aac --enable-libfreetype --enable-libfontconfig --enable-sdl --extra-libs=-levent
 
 
-#PATH="/root/bin:$PATH" PKG_CONFIG_PATH="$release_dir/lib/pkgconfig" ./configure --prefix=/root/release --pkg-config-flags=--static --extra-cflags=-I/root/release/include --extra-ldflags='-L/root/release/lib -ldl -lm -lpthread -lrt -lstdc++ -static' --extra-libs=-lpthread --extra-libs=-lm --bindir=/root/release/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libopus --enable-libvpx --enable-libx264 --enable-libx265 --enable-nonfree
