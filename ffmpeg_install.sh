@@ -699,7 +699,6 @@ then
     --enable-libfdk_aac \
     --enable-libmp3lame \
     --enable-libx264 \
-    --enable-libx265 \
     --enable-pthreads \
     --enable-libfreetype \
     --enable-libfontconfig \
