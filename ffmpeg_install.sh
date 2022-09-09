@@ -450,43 +450,35 @@ popd
 
 
 # libx265
-#pushd ${build_dir} 
-#if ! [ -e "x265" ]
-#then
-#    echo "########## libx265 begin ##########"
-#    if ! [ -e "x265_2.6.tar.gz" ]
-#    then
-#        # download x265_2.6.tar.gz
-#        echo "########## to download x265  ##########"
-#        wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz --no-check-certificate
-#    fi
+pushd ${build_dir} 
+if ! [ -e "x265" ]
+then
+    echo "########## libx265 begin ##########"
+    if ! [ -e "x265_2.6.tar.gz" ]
+    then
+        # download x265_2.6.tar.gz
+        echo "########## to download x265  ##########"
+        wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz --no-check-certificate
+    fi
 
 
-
-
-
-
-
-
-
-
-#    # download page: wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz
-#    tar xf x265_2.6.tar.gz
-#    pushd x265_v2.6
-#    #pushd build/linux 
-#    #PATH="${release_dir}/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${release_dir}" -DENABLE_SHARED:BOOL=OFF -DBIN_INSTALL_DIR=/root/release/bin -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
+    # download page: wget http://mirrors.nju.edu.cn/videolan-ftp/x265/x265_2.6.tar.gz
+    tar xf x265_2.6.tar.gz
+    pushd x265_v2.6
+    pushd build/linux 
+    PATH="${release_dir}/bin:${BIN_DIR}/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${release_dir}" -DENABLE_SHARED:BOOL=OFF -DBIN_INSTALL_DIR=/root/release/bin -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
 #    PATH="${release_dir}/bin:${BIN_DIR}:$PATH" cmake ./source -DCMAKE_INSTALL_PREFIX=${release_dir} -DBUILD_SHARED_LIBS=OFF -DBIN_INSTALL_DIR=${release_dir}/bin
 #    #cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DENABLE_SHARED:BOOL=OFF -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
-#    #make -j16
-#    #make install
-#    popd
-#    popd
-#    touch x265
-#    echo "########## libx265 ok ##########"
-#else
-#    echo "########## libx265 has been installed ##########"
-#fi
-#popd
+     make -j16
+    make install
+    popd
+    popd
+    touch x265
+    echo "########## libx265 ok ##########"
+else
+    echo "########## libx265 has been installed ##########"
+fi
+popd
 
 
 
@@ -672,7 +664,23 @@ then
     #echo ${ffmpeg_exported_release_dir}/lib
  
 
-    PATH="${BIN_DIR}:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir} --pkg-config-flags=--static --extra-cflags=-I${release_dir}/include --extra-ldflags='-L${release_dir}/lib -ldl -lm -lpthread -lrt -static' --extra-libs=-lpthread --extra-libs=-lm --bindir=${release_dir}/bin --enable-gpl --enable-static --disable-shared --enable-libfdk_aac --enable-libopus --enable-libvpx --enable-libx264  --enable-nonfree
+    PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir} \
+    --pkg-config-flags=--static \
+    --extra-cflags=-I${release_dir}/include \
+    --extra-ldflags='-L${release_dir}/lib -L${release_dir}/lib64 -ldl -lm -lpthread -lrt -static' \
+    --extra-libs='-lpthread -lm' \
+    --bindir=${release_dir}/bin \
+    --enable-gpl \
+    --enable-static \
+    --disable-shared \
+    --enable-libfdk_aac \
+    --enable-libopus \
+    --enable-libvpx \
+    --enable-libx264  \
+    --enable-libfreetype \
+    --enable-libfontconfig \
+    --enable-libfribidi \
+    --enable-nonfree
 
 
 
