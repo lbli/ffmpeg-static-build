@@ -24,7 +24,9 @@ TARGET_DIR_SED=$(echo $release_dir | awk '{gsub(/\//, "\\/"); print}')
 pushd ${build_dir}
 if ! [ -e "yasm" ]
 then
-    echo "########## yasm begin ##########"
+    echo "########################################################################## yasm begin ###########################################################"
+    echo "########################################################################## yasm begin ###########################################################"
+    echo "########################################################################## yasm begin ###########################################################"
     if ! [ -e "yasm-1.3.0.tar.gz" ]
     then
         # download yasm
@@ -39,9 +41,13 @@ then
     make install
     popd
     touch yasm
-    echo "########## yasm ok ##########"
+    echo "######################################################################### yasm ok ###############################################################"
+    echo "######################################################################### yasm ok ###############################################################"
+    echo "######################################################################### yasm ok ################################################################"
 else
-    echo "########## yasm has been installed ##########"
+    echo "###################################################################### yasm has been installed ####################################################"
+    echo "###################################################################### yasm has been installed ####################################################"
+    echo "###################################################################### yasm has been installed ####################################################"
 fi
 popd
 
@@ -358,6 +364,74 @@ popd
 
 
 
+# libogg
+pushd ${build_dir}
+if ! [ -e "libogg" ]
+then
+    echo "################################################################# libogg begin ########################################################################################"
+    echo "################################################################# libogg begin ########################################################################################"
+    echo "################################################################# libogg begin ########################################################################################"
+
+    if ! [ -e "libogg-1.3.2.tar.gz" ]
+    then
+        # download libogg-1.3.2.tar.gz
+        echo "########## to download libogg-1.3.2.tar.gz  ##########"
+        wget http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.gz --no-check-certificate
+    fi
+
+    tar xf libogg-1.3.2.tar.gz
+    pushd libogg-1.3.2
+
+    PATH="$BIN_DIR:${release_dir}/bin:$PATH"  LDFLAGS="-L${release_dir}/lib" CPPFLAGS="-I${release_dir}/include" ./configure --prefix=${release_dir}  --disable-shared
+    make
+    make install
+    make distclean
+    popd
+    touch libogg
+    echo "################################################################ libvorbis ok #######################################################################################"
+    echo "################################################################ libvorbis ok #######################################################################################"
+    echo "################################################################ libvorbis ok #######################################################################################"
+else
+    echo "####################################################libvorbis has been installed ###########################################################################"
+    echo "####################################################libvorbis has been installed ###########################################################################"
+    echo "####################################################libvorbis has been installed ###########################################################################"
+fi
+popd
+
+
+
+
+
+
+
+# libvorbis
+pushd ${build_dir}
+if ! [ -e "libvorbis" ]
+then
+    echo "########## libvorbis begin ##########"
+
+    if ! [ -e "libvorbis-1.3.4.tar.gz" ]
+    then
+        # download libvorbis-1.3.4.tar.gz
+        echo "########## to download libvorbis-1.3.4.tar.gz  ##########"
+        wget http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz --no-check-certificate
+    fi
+
+    tar xf libvorbis-1.3.4.tar.gz
+    pushd libvorbis-1.3.4
+
+    PATH="$BIN_DIR:${release_dir}/bin:$PATH"  LDFLAGS="-L${release_dir}/lib" CPPFLAGS="-I${release_dir}/include" ./configure --prefix=${release_dir} --with-ogg="${release_dir}" --disable-shared
+
+    make
+    make install
+    make distclean
+    popd
+    touch libvorbis
+    echo "########## libvorbis ok ##########"
+else
+    echo "########## libvorbis has been installed ##########"
+fi
+popd
 
 
 # opus
@@ -684,6 +758,7 @@ then
 
 
 
+
     PATH="${BIN_DIR}:${release_dir}/bin:$PATH" PKG_CONFIG_PATH="${release_dir}/lib/pkgconfig" ./configure --prefix=${release_dir}  \
     --extra-cflags="-I${release_dir}/include" \
     --extra-ldflags="-L${release_dir}/lib -L${release_dir}/lib64" \
@@ -703,9 +778,10 @@ then
     --enable-libfreetype \
     --enable-libfontconfig \
     --enable-libopus \
+    --enable-libvorbis \
     --enable-libvpx \
     --enable-nonfree \
-    --extra-ldflags="-L/root/dev_env/release/lib -ldl -lm -lpthread -lrt"
+    --extra-ldflags="-L/root/dev_env/release/lib -ldl -lm -lpthread -lrt -static"
     #--extra-ldflags="-L/root/dev_env/release/lib -ldl -lm -lpthread -lrt -static -lc"
 
 
