@@ -64,7 +64,9 @@ build_dir="${current_dir}/build"
 release_dir="${current_dir}/release"
 BIN_DIR="${current_dir}/bin"
 
-print_tips "start to build the tools for transcode system(current_dir: ${current_dir}, build_dir: ${build_dir}, release_dir: ${release_dir})..."
+print_tips "start to build ffmpeg current_dir: ${current_dir}"
+print_tips "start to build ffmpeg build_dir: ${build_dir}"
+print_tips "start to build ffmpeg release_dir: ${release_dir}"
  
 mkdir -p ${build_dir}
 mkdir -p ${release_dir}
@@ -616,7 +618,7 @@ install_libvorbis
 
 function install_opus {
 
-    OPUS_LIB_PACKAGE=libvorbis-1.3.4.tar.gz
+    OPUS_LIB_PACKAGE=opus-1.1.2.tar.gz
     OPUS_LIB=$(basename ${OPUS_LIB_PACKAGE} .tar.gz)
 
     pushd ${build_dir}
@@ -761,6 +763,7 @@ function install_libx265 {
             exit 1
         fi
         popd
+        popd
         touch ${LIBX265_LIB}${BUILDED_FLAG}
         print_ok "${LIBX265_LIB} fininsh installed"
     else
@@ -903,8 +906,7 @@ function install_fontconfig {
         if ! [ -e ${FONTCONFIG_LIB} ]
         then
             print_tips "${FONTCONFIG_LIB} start downloading"
-            wget http://download.savannah.gnu.org/releases/freetype/${FONTCONFIG_LIB_PACKAGE} --no-check-certificate
-            
+            wget https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.95.tar.gz --no-check-certificate 
         fi
 
         tar xf ${FONTCONFIG_LIB_PACKAGE}
@@ -925,6 +927,8 @@ function install_fontconfig {
     fi
     popd
 }
+
+install_fontconfig
 
 
 function install_ffmpeg5.1 {
