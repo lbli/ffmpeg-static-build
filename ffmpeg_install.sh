@@ -583,7 +583,7 @@ function install_libvorbis {
     LIBVORBIS_LIB=$(basename ${LIBVORBIS_LIB_PACKAGE} .tar.gz)
 
     pushd ${build_dir}
-    if ! [ -e "${LIBOGG_LIB}${BUILDED_FLAG}" ]
+    if ! [ -e "${LIBVORBIS_LIB}${BUILDED_FLAG}" ]
     then
         print_tips "start installing ${LIBVORBIS_LIB}"
 
@@ -974,6 +974,8 @@ function install_ffmpeg5.1 {
         --enable-nonfree \
         --extra-ldflags="-L/root/dev_env/release/lib -ldl -lm -lpthread -lrt -static"
 
+        PATH="${BIN_DIR}:${release_dir}/bin:$PATH" make -j16
+        PATH="${BIN_DIR}:${release_dir}/bin:$PATH" make install
         if [ $? -ne 0 ]; then
             print_failed "${FFMPEG_LIB} install failed"
             exit 1
