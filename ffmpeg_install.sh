@@ -111,8 +111,6 @@ function install_yasm {
     popd
 }
 
-install_yasm
-
 function install_nasm {
 
     NASM_LIB_PACKAGE=nasm-2.15.05.tar.gz
@@ -146,9 +144,6 @@ function install_nasm {
     fi
     popd
 }
-
-install_nasm
-
 
 function install_openssl {
 
@@ -184,11 +179,6 @@ function install_openssl {
     popd
 }
 
-install_openssl
-
-
-
-
 function install_libevent {
 
     LIBEVENT_LIB_PACKAGE=libevent-2.1.12-stable.tar.gz
@@ -222,11 +212,6 @@ function install_libevent {
     fi
     popd
 }
-
-
-install_libevent
-
-
 
 function install_libz {
 
@@ -262,8 +247,6 @@ function install_libz {
     popd
 }
 
-install_libz
-
 function install_libbz2 {
 
     LIBBZ2_LIB_PACKAGE=bzip2-1.0.6.tar.gz
@@ -296,11 +279,6 @@ function install_libbz2 {
     fi
     popd
 }
-
-install_libbz2
-
-
-
 
 function install_perl {
 
@@ -336,10 +314,6 @@ function install_perl {
     popd
 }
 
-install_perl
-
-
-
 function install_m4 {
 
     M4_LIB_PACKAGE=m4-1.4.18.tar.gz
@@ -373,11 +347,6 @@ function install_m4 {
     fi
     popd
 }
-
-install_m4
-
-
-
 
 function install_autoconf {
 
@@ -413,10 +382,6 @@ function install_autoconf {
     popd
 }
 
-#install_autoconf
-
-
-
 function install_cmake {
 
     CMAKE_LIB_PACKAGE=cmake-3.10.0.tar.gz
@@ -451,13 +416,6 @@ function install_cmake {
     popd
 }
 
-install_cmake
-
-
-
-
-
-
 function install_fdkacc {
 
     FDKACC_LIB_PACKAGE=fdk-aac-0.1.6.tar.gz
@@ -491,10 +449,6 @@ function install_fdkacc {
     fi
     popd
 }
-
-install_fdkacc
-
-
 
 function install_mp3lame {
 
@@ -531,15 +485,6 @@ function install_mp3lame {
     popd
 }
 
-install_mp3lame
-
-
-
-
-
-
-
-
 function install_libogg {
 
     LIBOGG_LIB_PACKAGE=libogg-1.3.2.tar.gz
@@ -573,9 +518,6 @@ function install_libogg {
     fi
     popd
 }
-
-install_libogg
-
 
 function install_libvorbis {
 
@@ -611,11 +553,6 @@ function install_libvorbis {
     popd
 }
 
-install_libvorbis
-
-
-
-
 function install_opus {
 
     OPUS_LIB_PACKAGE=opus-1.1.2.tar.gz
@@ -649,12 +586,6 @@ function install_opus {
     fi
     popd
 }
-
-install_opus
-
-
-
-
 
 function install_libx264 {
 
@@ -690,9 +621,6 @@ function install_libx264 {
     popd
 }
 
-install_libx264
-
-
 function install_libvpx {
 
     LIBVPX_LIB_PACKAGE=libvpx_1.12.0.orig.tar.gz
@@ -727,12 +655,6 @@ function install_libvpx {
     fi
     popd
 }
-
-install_libvpx
-
-
-
-
 
 function install_libx265 {
 
@@ -772,9 +694,6 @@ function install_libx265 {
     popd
 }
 
-install_libx265
-
-
 function install_libpng {
 
     LIBPNG_LIB_PACKAGE=libpng-1.6.37.tar.xz
@@ -809,10 +728,6 @@ function install_libpng {
     fi
     popd
 }
-
-install_libpng
-
-
 
 function install_libxml2 {
 
@@ -849,8 +764,6 @@ function install_libxml2 {
     fi
     popd
 }
-
-install_libxml2
 
 function install_freetype {
 
@@ -890,7 +803,50 @@ function install_freetype {
     popd
 }
 
-install_freetype
+
+function install_fribidi {
+
+    FRIBIDI_LIB_PACKAGE=fribidi-1.0.11.tar.xz
+    FRIBIDI_LIB=$(basename ${FRIBIDI_LIB_PACKAGE} .tar.xz)
+
+    pushd ${build_dir}
+    if ! [ -e "${FRIBIDI_LIB}${BUILDED_FLAG}" ]
+    then
+        print_tips "start installing ${FRIBIDI_LIB}"
+
+        if ! [ -e ${FRIBIDI_LIB} ]
+        then
+            print_tips "${FRIBIDI_LIB} start downloading"
+            wget https://github.com/fribidi/fribidi/releases/download/v1.0.11/${FRIBIDI_LIB_PACKAGE} --no-check-certificate
+
+        fi
+
+        tar xf ${FRIBIDI_LIB_PACKAGE}
+
+        pushd ${FRIBIDI_LIB}
+        PATH="$BIN_DIR:$PATH" PKG_CONFIG_PATH=${release_dir}/lib/pkgconfig ./configure --prefix=${release_dir} --enable-static=yes --enable-shared=no
+        make
+        make install
+
+
+        if [ $? -ne 0 ]; then
+            print_failed "${FRIBIDI_LIB} install failed"
+            exit 1
+        fi
+        popd
+        touch ${FRIBIDI_LIB}${BUILDED_FLAG}
+        print_ok "${FRIBIDI_LIB} fininsh installed"
+    else
+        print_tips "${FRIBIDI_LIB}  already installed"
+    fi
+    popd
+}
+
+
+
+
+
+
 
 
 function install_fontconfig {
@@ -928,9 +884,6 @@ function install_fontconfig {
     popd
 }
 
-install_fontconfig
-
-
 function install_ffmpeg5.1 {
 
     FFMPEG_LIB_PACKAGE=ffmpeg-5.1.tar.xz
@@ -967,6 +920,7 @@ function install_ffmpeg5.1 {
         --enable-libx264 \
         --enable-pthreads \
         --enable-libfreetype \
+        --enable-libfribidi \
         --enable-libfontconfig \
         --enable-libopus \
         --enable-libvorbis \
@@ -989,6 +943,32 @@ function install_ffmpeg5.1 {
     popd
 }
 
+
+
+
+install_yasm
+install_nasm
+install_openssl
+install_libevent
+install_libz
+install_libbz2
+install_perl
+install_m4
+#install_autoconf
+install_cmake
+install_fdkacc
+install_mp3lame
+install_libogg
+install_libvorbis
+install_opus
+install_libx264
+install_libvpx
+#install_libx265
+install_libpng
+install_libxml2
+install_freetype
+install_fribidi
+install_fontconfig
 install_ffmpeg5.1
 
 
